@@ -10,7 +10,16 @@ QtObject {
     readonly property int pixelSize: fontMetrics.font.pixelSize
     readonly property bool darkMode: Theme.darkMode
 
+    // BMI Cloud brand palette.
+    readonly property color brandGold: "#F2BA67"
+    readonly property color brandDark: "#2E2925"
+    readonly property color brandBlack: "#000000"
+    readonly property color brandWhite: "#FFFFFF"
+
     // Colors
+    // ncBlue is the application accent color. It is sourced from the wizard
+    // header background, which is set to the BMI Cloud brand gold in the build
+    // configuration (see NEXTCLOUD.cmake).
     readonly property color ncBlue: Theme.wizardHeaderBackgroundColor
     readonly property color ncHeaderTextColor: Theme.wizardHeaderTitleColor
     readonly property color accentColor: UserModel.currentUser ? UserModel.currentUser.accentColor : ncBlue
@@ -32,23 +41,23 @@ QtObject {
     readonly property color wizardRowBorder: darkMode ? "#3c454c" : "#e1e8ee"
     readonly property color wizardRowDisabledBackground: darkMode ? "#252729" : "#fafafa"
     readonly property color wizardRowDisabledBorder: darkMode ? "#343a3f" : "#edf1f4"
-    readonly property color wizardSelectedBackground: darkMode ? "#263b4a" : "#eef5fb"
-    readonly property color wizardSelectedBorder: darkMode ? "#365b73" : "#d8e7f1"
-    readonly property color wizardRadioAccent: darkMode ? "#4da3d4" : "#0076b5"
+    readonly property color wizardSelectedBackground: darkMode ? "#3a332a" : "#fbf0dc"
+    readonly property color wizardSelectedBorder: darkMode ? "#8a6b34" : "#eccf94"
+    readonly property color wizardRadioAccent: darkMode ? "#F2BA67" : "#D9A452"
     readonly property color wizardRadioDisabled: darkMode ? "#65727a" : "#b7c0c7"
     readonly property color wizardSecondaryButtonBackground: darkMode ? "#303b43" : "#e7eef4"
     readonly property color wizardSecondaryButtonPressed: darkMode ? "#394852" : "#dce8f0"
     readonly property color wizardSecondaryButtonBorder: darkMode ? "#4a5963" : "#d5e0e7"
     readonly property color wizardDisabledButtonBackground: darkMode ? "#292f33" : "#eef3f7"
     readonly property color wizardDisabledButtonBorder: darkMode ? "#39434a" : "#dde7ee"
-    readonly property color wizardPrimaryButtonBackground: "#2b659a"
-    readonly property color wizardPrimaryButtonPressed: "#245783"
+    readonly property color wizardPrimaryButtonBackground: "#F2BA67"
+    readonly property color wizardPrimaryButtonPressed: "#D9A452"
     readonly property color wizardWarningBorder: darkMode ? "#d99832" : "#b36b00"
     readonly property color wizardWarningText: darkMode ? "#f2b84b" : "#8a5200"
     readonly property color wizardErrorBorder: darkMode ? "#e06c75" : "#d84b4b"
     readonly property color wizardErrorText: darkMode ? "#ff7b86" : "#b00020"
     readonly property color wizardAvatarPlaceholder: darkMode ? "#3b464d" : "#dfe8ee"
-    readonly property color wizardSelectedText: "#ffffff"
+    readonly property color wizardSelectedText: brandDark
     readonly property color listItemHoverBackground: darkMode ? "#3a3a3a" : "#f2f2f2"
 
     // ErrorBox colors
@@ -123,6 +132,7 @@ QtObject {
     readonly property int extraSmallIconSize: 8
 
     readonly property int wizardWindowMargin: 24
+    readonly property int wizardBrandLogoHeight: variableSize(48)
     readonly property int wizardWindowTopMargin: standardSpacing
     readonly property int wizardFooterButtonHeight: iconButtonWidth
     readonly property int wizardButtonHorizontalPadding: 18

@@ -25,6 +25,22 @@ Item {
         anchors.bottomMargin: Style.wizardWindowMargin
         spacing: 4
 
+        Image {
+            objectName: "brandLogo"
+
+            source: "qrc:/client/theme/colored/wizard_logo.svg"
+            sourceSize.width: Style.wizardBrandLogoHeight
+            sourceSize.height: Style.wizardBrandLogoHeight
+            Layout.preferredWidth: Style.wizardBrandLogoHeight
+            Layout.preferredHeight: Style.wizardBrandLogoHeight
+            Layout.bottomMargin: Style.smallSpacing
+            fillMode: Image.PreserveAspectFit
+            horizontalAlignment: Image.AlignLeft
+
+            Accessible.role: Accessible.Graphic
+            Accessible.name: qsTr("Application logo")
+        }
+
         EnforcedPlainTextLabel {
             text: qsTr("Log in to %1").arg(root.controller.appName)
             color: root.primaryTextColor

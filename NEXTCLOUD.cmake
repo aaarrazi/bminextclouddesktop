@@ -4,16 +4,22 @@
 #
 # keep the application name and short name the same or different for dev and prod build
 # or some migration logic will behave differently for each build
+# BMI Cloud branding: APPLICATION_NAME is the human readable name shown in the
+# GUI, Task Manager, shortcuts and installers. APPLICATION_SHORTNAME stays as the
+# stable internal identity (config group, keychain entry, socket path, install
+# directory and registry key) so existing installations keep their settings.
+# APPLICATION_ICON_NAME is a filesystem-safe token naming the icon assets under
+# theme/colored/ (see theme/colored/BMICloud-icon.svg).
 if(NEXTCLOUD_DEV)
-    set( APPLICATION_NAME       "NextcloudDev" )
+    set( APPLICATION_NAME       "[BMI Cloud] Dev" )
     set( APPLICATION_SHORTNAME  "NextcloudDev" )
     set( APPLICATION_EXECUTABLE "nextclouddev" )
-    set( APPLICATION_ICON_NAME  "Nextcloud" )
+    set( APPLICATION_ICON_NAME  "BMICloud" )
 else()
-    set( APPLICATION_NAME       "Nextcloud" )
+    set( APPLICATION_NAME       "[BMI Cloud]" )
     set( APPLICATION_SHORTNAME  "Nextcloud" )
     set( APPLICATION_EXECUTABLE "nextcloud" )
-    set( APPLICATION_ICON_NAME  "${APPLICATION_SHORTNAME}" )
+    set( APPLICATION_ICON_NAME  "BMICloud" )
 endif()
 
 set( APPLICATION_CONFIG_NAME "${APPLICATION_EXECUTABLE}" )
@@ -114,9 +120,11 @@ option( DO_NOT_USE_PROXY "Do not use system wide proxy, instead always do a dire
 option( WIN_DISABLE_USERNAME_PREFILL "Do not prefill the Windows user name when creating a new account" OFF )
 
 ## Theming options
-set(NEXTCLOUD_BACKGROUND_COLOR "#0082c9" CACHE STRING "Default Nextcloud background color")
+# BMI Cloud brand palette: gold #F2BA67 (accent), dark brown #2E2925,
+# black #000000 and white #FFFFFF.
+set(NEXTCLOUD_BACKGROUND_COLOR "#F2BA67" CACHE STRING "Default Nextcloud background color")
 set( APPLICATION_WIZARD_HEADER_BACKGROUND_COLOR ${NEXTCLOUD_BACKGROUND_COLOR} CACHE STRING "Hex color of the wizard header background")
-set( APPLICATION_WIZARD_HEADER_TITLE_COLOR "#ffffff" CACHE STRING "Hex color of the text in the wizard header")
+set( APPLICATION_WIZARD_HEADER_TITLE_COLOR "#2E2925" CACHE STRING "Hex color of the text in the wizard header")
 option( APPLICATION_WIZARD_USE_CUSTOM_LOGO "Use the logo from ':/client/theme/colored/wizard_logo.(png|svg)' else the default application icon is used" ON )
 
 #

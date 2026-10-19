@@ -66,6 +66,19 @@ Item {
             return null
         }
 
+        function findByObjectName(item, objectName) {
+            if (item.objectName === objectName) {
+                return item
+            }
+            for (let i = 0; i < item.children.length; ++i) {
+                const found = findByObjectName(item.children[i], objectName)
+                if (found) {
+                    return found
+                }
+            }
+            return null
+        }
+
         function buttonLabel(button) {
             for (let i = 0; i < button.contentItem.children.length; ++i) {
                 const child = button.contentItem.children[i]
@@ -149,6 +162,16 @@ Item {
             tryVerify(() => label.truncated)
             const rightEdge = button.mapToItem(wizard.contentItem, button.width, 0).x
             verify(rightEdge <= wizard.width - Style.wizardWindowMargin, "button overflows to " + rightEdge)
+        }
+
+        function test_welcomePageShowsBrandLogo() {
+            const wizard = createWizard(AccountWizardController.ServerStep)
+            const logo = findByObjectName(wizard.contentItem, "brandLogo")
+
+            verify(logo, "the welcome page must show the application logo")
+            compare(logo.width, Style.wizardBrandLogoHeight)
+            compare(logo.height, Style.wizardBrandLogoHeight)
+            compare(logo.fillMode, Image.PreserveAspectFit)
         }
     }
 }
