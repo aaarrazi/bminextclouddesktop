@@ -75,12 +75,12 @@ jobs:
         shell: pwsh
         run: |
           & cmd /C "git clone -q --depth=1 https://github.com/KDE/craftmaster.git ${{ env.CRAFT_MASTER_LOCATION }} 2>&1"
-          
+
           function craft() {
               python "${{ env.CRAFT_MASTER_LOCATION }}\CraftMaster.py" --config "${{ env.CRAFT_MASTER_CONFIG }}" --target ${{ env.CRAFT_TARGET }} -c $args
               if($LASTEXITCODE -ne 0) {exit $LASTEXITCODE}
           }
-          
+
           craft --add-blueprint-repository "https://github.com/nextcloud/craft-blueprints-kde.git|${{ steps.craft-revisions.outputs.kde_ref }}|"
           craft --add-blueprint-repository "https://github.com/nextcloud/craft-blueprints-nextcloud.git|${{ steps.craft-revisions.outputs.nextcloud_ref }}|"
           craft craft
@@ -106,25 +106,49 @@ jobs:
         shell: pwsh
         run: |
           echo "${{ github.workspace }}\${{ env.CRAFT_TARGET }}\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-   
-      - name: Build and package installer
+
+      - name: Build client
         shell: pwsh
         run: |
           function craft() {
               python "${{ env.CRAFT_MASTER_LOCATION }}\CraftMaster.py" --config "${{ env.CRAFT_MASTER_CONFIG }}" --target ${{ env.CRAFT_TARGET }} -c $args
               if($LASTEXITCODE -ne 0) {exit $LASTEXITCODE}
           }
-          
+
           craft --src-dir ${{ github.workspace }} nextcloud-client
-          
+
+      - name: Ensure NSIS for packaging
+        shell: pwsh
+        run: |
+          function craft() {
+              python "${{ env.CRAFT_MASTER_LOCATION }}\CraftMaster.py" --config "${{ env.CRAFT_MASTER_CONFIG }}" --target ${{ env.CRAFT_TARGET }} -c $args
+              if($LASTEXITCODE -ne 0) {exit $LASTEXITCODE}
+          }
+
+          # NullsoftInstallerPackager needs makensis >= 3.03
+          craft nsis
+          Get-Command makensis -ErrorAction SilentlyContinue | ForEach-Object { Write-Output $_.Source }
+
+      - name: Create installer
+        shell: pwsh
+        run: |
+          function craft() {
+              python "${{ env.CRAFT_MASTER_LOCATION }}\CraftMaster.py" --config "${{ env.CRAFT_MASTER_CONFIG }}" --target ${{ env.CRAFT_TARGET }} -c $args
+              if($LASTEXITCODE -ne 0) {exit $LASTEXITCODE}
+          }
+
+          # The build step above only compiles+installs; the .exe is
+          # produced by the packager (PACKAGENAME-setup-BUILDTARGET.exe).
+          craft --src-dir ${{ github.workspace }} --package nextcloud-client
+
       - name: Locate installer
         shell: pwsh
         run: |
-          $hits = Get-ChildItem -Path "${{ github.workspace }}\${{ env.CRAFT_TARGET }}" -Recurse -Include "*-setup.exe" -ErrorAction SilentlyContinue
+          $hits = Get-ChildItem -Path "${{ github.workspace }}\${{ env.CRAFT_TARGET }}" -Recurse -Include "*setup*.exe" -ErrorAction SilentlyContinue
           if ($hits) {
               $hits | ForEach-Object { Write-Output $_.FullName }
           } else {
-              Write-Output "No *-setup.exe found, listing executables for diagnosis:"
+              Write-Output "No *setup*.exe found, listing executables for diagnosis:"
               Get-ChildItem -Path "${{ github.workspace }}\${{ env.CRAFT_TARGET }}" -Recurse -Include "*.exe" -ErrorAction SilentlyContinue | ForEach-Object { Write-Output $_.FullName }
               exit 1
           }
@@ -133,5 +157,5 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: bmi-cloud-windows-setup
-          path: ${{ github.workspace }}/${{ env.CRAFT_TARGET }}/**/*-setup.exe
+          path: ${{ github.workspace }}/${{ env.CRAFT_TARGET }}/**/*setup*.exe
           overwrite: true
